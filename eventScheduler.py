@@ -18,14 +18,12 @@ def binary_search(events, target_title):
     while start <= end:
         mid = start + (end - start) // 2
 
-        # Check if the target title is equal to the middle event's title
         if events[mid]['title'] == target_title:
             return mid
 
-        # If the target title is greater, search in the right half
         elif events[mid]['title'] < target_title:
             start = mid + 1
-        # If the target title is smaller, search in the left half
+
         else:
             end = mid - 1
 
@@ -44,11 +42,10 @@ def binary_search_insert(arr, new_event_title):
         else:
             right = mid - 1
 
-    return left  # Return the position where the element should be inserted
+    return left  # Index where the element should be inserted
 
-# add a new event
+
 def add_event(title, description, date, time):
-    # Check if the title already exists
     is_Duplicate = binary_search(events, title)
     if is_Duplicate != None:
         print(f"Cannot Create Event, title '{title}' already exists.")
@@ -65,7 +62,7 @@ def add_event(title, description, date, time):
     insert_position = binary_search_insert(events, new_event_title)
     events.insert(insert_position, new_event)
     print("Event added successfully!")
-    #maintaining a sorted-insertion makes Deleting Events by title easier
+    #maintaining a sorted-insertion makes Deleting Events/using binarySearch by title easier
 
 def display_events(events, searching=False):
     if not events and  not searching:
@@ -75,49 +72,42 @@ def display_events(events, searching=False):
         print(" No events with Keyword Found...")
         return
 
-    # Calculate maximum description length for formatting
-    max_description_length = 50  # Adjust as needed
+    # max description length- for formatting Output inside Wrappers
+    max_description_length = 50  
 
     eventCounter=0
     for event in events:
         eventCounter+=1
-        # Generate formatted output for each event
         formatted_output = []
         
         title_line = f"Title: {event['title']}"
-        # Split the description into multiple lines
-
-            # Initialize an empty list to store description lines
         description_lines = []
 
-        # Loop through the event description in chunks of max_description_length characters
+        # Loop Event description in chunks of max_desc_length chars
         for i in range(0, len(event['description']), max_description_length):
-            # Extract a substring of max_description_length characters
+            # Extract substrings
             description_chunk = event['description'][i:i + max_description_length]
 
-            # Create a formatted description line with the chunk and prepend "Description: "
             if i == 0:
                 description_line = f"Description: {description_chunk}"
             else:
                 description_line = description_chunk
 
-            # Append the formatted description line to the list of description lines
             description_lines.append(description_line)
 
         date_line = f"Date: {event['date']}"
         time_line = f"Time: {event['time']}"
 
-        # Add event details to the formatted output
         formatted_output.extend([title_line] + description_lines + [date_line, time_line, ""])
 
-        # Format the output
+    
         max_width = max(len(line) for line in formatted_output)
         top_line = "+" + "-" * math.floor(max_width / 2) +f"{eventCounter}"+ "-" * math.ceil(max_width / 2) + "+"
         bottom_line = "+" + "_" * (max_width + 2) + "+"
         formatted_output = [top_line] + ["| " + line.ljust(max_width) + " |" for line in formatted_output] + [bottom_line]
 
-        # Print the formatted output
-        print("\n".join(formatted_output))
+    
+        print("\n".join(formatted_output)) #Wrapped output
 
 
 def edit_event(title):
@@ -135,14 +125,14 @@ def edit_event(title):
                     datetime.strptime(date, '%Y-%m-%d')
                     event['date'] = date
                 except ValueError:
-                    print("Invalid date format. Date not updated.")
+                    print("Invalid date format:( ,Date not updated.")
 
             if time:
                 try:
                     datetime.strptime(time, '%H:%M')
                     event['time'] = time
                 except ValueError:
-                    print("Invalid time format. Time not updated.")
+                    print("Invalid time format:( ,Time not updated.")
 
             print("Event updated successfully!")
             return
@@ -167,7 +157,7 @@ def search_events(events, query):
         if query in event['date']:
             found_events.append(event)
 
-    # Search by keyword in title/description
+    #by keyword in title/desc
     for event in events:
         if query in event['title'] or query in event['description'] and event not in found_events:
                 found_events.append(event)
@@ -186,7 +176,7 @@ def get_valid_input(prompt, format_str, error_message): #looping till user enter
                 print(error_message)
 
 
-# Main function
+# The Program
 def main():
     menu = """
     Event Scheduler Main Menu:
@@ -246,7 +236,7 @@ def main():
             print("Exiting...")
             break
         else:
-            print("Invalid choice. Please enter a valid option.")
+            print("Invalid choice, Please enter a valid option on Menu.")
 
 
 
